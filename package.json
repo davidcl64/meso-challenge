@@ -12,7 +12,8 @@
     "test": "mocha --require @babel/register --exit",
     "test:debug": "mocha --require @babel/register --inspect-brk --exit",
     "lint": "eslint -c .eslintrc.json {server,test}/**",
-    "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**"
+    "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**",
+    "docker": "npm run compile && docker-compose up --build"
   },
   "dependencies": {
     "body-parser": "^1.18.2",

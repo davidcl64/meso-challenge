@@ -1,0 +1,47 @@
+version: "3"
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: local/api
+    volumes:
+      - ".:/app"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    environment:
+      # IMPORTANT!!!
+      # This needs to move out of checked in configuration before
+      # any secrets are added to this file.
+      - MONGO_DB=mongodb://mongo:27017/meso_api
+  mongo:
+    image: mongo:3.5
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    command: mongod --port 27017 --bind_ip_all
+  test:
+    build:
+      dockerfile: Dockerfile.test
+      context: .
+    volumes:
+      - ".:/app"
+    ports:
+      - "3030:3030"
+    depends_on:
+      - mongo
+      - api
+    links:
+      - mongo
+    environment:
+      # IMPORTANT!!!
+      # This needs to move out of checked in configuration before
+      # any secrets are added to this file.
+      - MONGO_DB=mongodb://mongo:27017/meso_api_test
+
+
