@@ -1,13 +1,21 @@
 /*
-    POST /v1/metrics/nodes/{nodename}/process/{processname}/
-      ○ Accepts a JSON payload with properties:
-        ■ “timeslice”: (float) number of seconds this measurement represents
-        ■ “cpu_used”: (float) percentage of CPU time allocated to this process over
-          the given time slice
-        ■ “mem_used”: (float) megabytes of memory allocated to this process over
-          the given time slice
+    GET /v1/analytics/nodes/average
+        ○ Accepts a query parameter:
+          ■ “timeslice” (float) seconds of history from the most recent POST to scan
+            for metrics data. Default to 60 seconds.
+        ○ Returns a JSON body with properties:
+          ■ “timeslice”: (float) seconds duration represented by the timeslace
+            ● How much time is covered in this report?
+            ● Should be the lesser of:
+              ○ The queried time-slice or its default
+              ○ The available data for scanning
+
+          ■ “cpu_used”: (float) percentage average of all nodes CPU usage over the
+            given timeslice
+          ■ “mem_used”: (float) percentage average of all nodes memory usage over
+            the given timeslice
 */
-function addProcessMetric(req, resp) {
+function getAverage(req, resp) {
   /* eslint-disable no-void */
   void req;
   resp
@@ -65,9 +73,9 @@ function getProcess(req, resp) {
 export default {
   routes: [
     {
-      type:    'post',
-      path:    '/metrics/nodes/:nodename/process/:processname',
-      handler: addProcessMetric
+      type:    'get',
+      path:    '/analytics/nodes/average',
+      handler: getAverage
     },
 
     {
