@@ -1,11 +1,11 @@
 import _ from 'lodash/fp';
 import * as express from 'express';
-import node from './node';
-import process from './process';
+import analytics from './analytics';
+import metrics from './metrics';
 
 const router = express.Router();
 
-_.concat(node.routes, process.routes)
+_.concat(analytics.routes, metrics.routes)
   .forEach(route => {
     router[route.type](route.path, route.handler);
   });

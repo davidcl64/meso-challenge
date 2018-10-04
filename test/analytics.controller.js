@@ -4,7 +4,7 @@ import Server from '../server';
 
 const expect = chai.expect;
 
-describe('process', () => {
+describe('Analytics', () => {
   describe('POST /api/v1/metrics/nodes/:nodename/process/:processname', () => {
     it('should respone with 501', () =>
       request(Server)
