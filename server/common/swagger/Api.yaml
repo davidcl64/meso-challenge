@@ -5,8 +5,6 @@ info:
   description: Mesosphere Coding Challenge
 basePath: /api/v1
 tags:
-  - name: Examples
-    description: Simple example endpoints
   - name: Specification
     description: The swagger API specification
 
@@ -17,55 +15,204 @@ produces:
 
 
 definitions:
-  ExampleBody:
+  NodeMetric:
     type: object
-    title: example
+    title: NodeMetric
+    required:
+      - timeslice
+      - cpu
+      - mem
+    properties:
+      timeslice:
+        type: number
+        description: number of seconds this measurement represents
+      cpu:
+        type: number
+        description: percentage used
+      mem:
+        type: number
+        description: percentage used
+
+  NodeAverage:
+    type: object
+    title: NodeAverage
+    required:
+      - timeslice
+      - cpu_used
+      - mem_used
+    properties:
+      timeslice:
+        type: number
+        description: |
+          seconds duration represented by the timeslace
+            ● How much time is covered in this report?
+            ● Should be the lesser of:
+              ○ The queried time-slice or its default
+              ○ The available data for scanning
+      cpu_used:
+        type: number
+        description: percentage average of all nodes CPU usage over the given timeslice
+      mem_used:
+        type: number
+        description: percentage average of all nodes memory usage over the given timeslice
+
+  ProcessReference:
+    type: object
+    title: ProcessReference
     required:
       - name
+      - url
     properties:
       name:
         type: string
-        example: no_stress
+        description: the name of each process
+      url:
+        type: string
+        description: the URL of its individual resource
+
+  ProcessReferenceList:
+    type: array
+    title: ProcessReferenceList
+    items:
+      $ref: '#/definitions/ProcessReference'
+
+  ProcessMetric:
+    type: object
+    title: ProcessMetric
+    required:
+      - timeslice
+      - cpu_used
+      - mem_used
+    properties:
+      timeslice:
+        type: number
+        description: Number of seconds this measurement represents
+      cpu_used:
+        type: number
+        description: percentage of CPU time allocated to this process over the given time slice
+      mem_used:
+        type: number
+        description: megabytes of memory allocated to this process over the given time slice
+
+  ProcessAverage:
+    type: object
+    title: ProcessMetric
+    required:
+      - timeslice
+      - cpu_used
+      - mem_used
+      - num_instances
+    properties:
+      timeslice:
+        type: number
+        description: |
+          seconds duration represented by the timeslace
+            ● How much time is covered in this report?
+            ● Should be the lesser of:
+              ○ The queried time-slice or its default
+              ○ The available data for scanning for this process
+      cpu_used:
+        type: number
+        description: average percentage CPU usage over all nodes over the given timeslice
+      mem_used:
+        type: number
+        description: average percentage memory usage over all nodes over the given timeslice
+      num_instances:
+        type: integer
+        description: how many distinct nodes reported this process
 
 paths:
-  /examples:
-    get:
-      tags:
-        - Examples
-      description: Fetch all examples
-      responses:
-        200:
-          description: Returns all examples
+  /metrics/node/{nodeName}/:
     post:
-      tags:
-        - Examples
-      description: Create a new example
+      description: Create a new node metric
       parameters:
-        - name: example
-          in: body
-          description: an example
-          required: true
-          schema: 
-            $ref: "#/definitions/ExampleBody"
-      responses:
-        200:
-          description: Returns all examples
-
-  /examples/{id}:
-    get:
-      tags:
-        - Examples
-      parameters:
-        - name: id
+        - name: nodeName
           in: path
           required: true
-          description: The id of the example to retrieve
-          type: integer
+          type: string
+        - name: nodeMetric
+          in: body
+          description: a node metric object
+          required: true
+          schema:
+            $ref: "#/definitions/NodeMetric"
       responses:
         200:
-          description: Return the example with the specified id
-        404:
-          description: Example not found
+          description: node metric was successfully created
+
+  /metrics/nodes/{nodeName}/process/{processName}/:
+    post:
+      description: Create a new process metric
+      parameters:
+        - name: nodeName
+          in: path
+          required: true
+          type: string
+        - name: processName
+          in: path
+          required: true
+          type: string
+        - name: processMetric
+          in: body
+          description: a process metric object
+          required: true
+          schema:
+            $ref: "#/definitions/ProcessMetric"
+      responses:
+        200:
+          description: process metric was successfully created
+
+  /analytics/nodes/average:
+    get:
+      description: Retrieves the average cpu and memory utilization for the requested time period
+    parameters:
+      - name: timeslice
+        in: query
+        required: false
+        default: 60
+    responses:
+      200:
+        description: The average cpu and memory utilized by all nodes for the given time period
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/NodeAverage'
+
+  /analytics/processes/:
+    get:
+      description: Retrieves a list of process and the location of their metrics
+    parameters:
+      - name: timeslice
+        in: query
+        required: false
+        default: 60
+    responses:
+      200:
+        description: An array of ProcessReference objects
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ProcessReferenceList'
+
+  /analytics/processes/{processName}/:
+    get:
+      description: Retrieves the average cpu and memory utilization for all nodes belonging to the requested process for the given time period
+    parameters:
+      - name: processName
+        in: path
+        required: true
+        type: string
+      - name: timeslice
+        in: query
+        required: false
+        default: 60
+    responses:
+      200:
+        description: The average cpu and memory utilized by all nodes for a given process and time period
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ProcessAverage'
 
   /spec:
     get:
