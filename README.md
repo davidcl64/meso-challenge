@@ -62,9 +62,21 @@ or debug them
 npm run test:debug
 ```
 
+## Running in a local docker environment
+
+Also provided is a docker-compose based environment for integration test with the data store.  Three containers are created:
+
+  1. api - the core API container
+  2. mongo - the data store
+  3. test - runs through unit (and ideally integration tests) as the environment is being brought up.
+
+```shell
+npm run docker
+```
+
 ## Try It
 * Open you're browser to [http://localhost:3000](http://localhost:3000)
-* Invoke the `/examples` endpoint 
+* Invoke the `/examples` endpoint
   ```shell
   curl http://localhost:3000/api/v1/examples
   ```
@@ -110,4 +122,4 @@ cf push meso-challenge
 ```
 
 
-   
+

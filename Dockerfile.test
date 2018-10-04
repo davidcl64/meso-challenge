@@ -1,0 +1,24 @@
+FROM local/api
+
+
+# Redundant but when nodule modules contents change, it will force a
+# reinstall
+copy package.json package.json
+
+# Override the NODE_ENV environment variable to 'dev', in order to get required test packages
+ENV NODE_ENV dev
+
+# Get test packages
+RUN npm install
+
+# Install app dependencies
+COPY .babelrc .babelrc
+COPY .cfignore .cfignore
+COPY .env .env
+COPY .eslintrc.json .eslintrc.json
+COPY server server
+COPY test test
+
+#Expose port and start application
+EXPOSE 3030
+CMD [ "npm", "run", "test" ]
