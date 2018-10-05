@@ -1,4 +1,5 @@
 import assert from 'assert';
+import _ from 'lodash/fp';
 import coreDB from './coreDB';
 
 /*
@@ -7,14 +8,17 @@ import coreDB from './coreDB';
 function addNodeMetric(metric, done) {
   coreDB.collection('NodeMetrics', (colErr, col) => {
     if (!colErr) {
-      col.insertOne(metric, (insertErr, result) => {
+      col.insertOne(_.merge({
+        created: Date.now()
+      }, metric), (insertErr, result) => {
         let retVal = null;
         if (!insertErr) {
           // If this assertion fails, it is a programmer error and the service should fail hard
           assert(result.ops.length === 1, 'Single insert should never return multiple values');
 
           // Since this is a single add function, just grab the first item in the list
-          retVal = result.ops[0];
+          // Currently leaving out the 'created' attribute
+          retVal = _.omit(['created'], result.ops[0]);
         }
 
         done(insertErr, retVal);
@@ -36,14 +40,21 @@ function addNodeMetric(metric, done) {
 function addProcessMetric(metric, done) {
   coreDB.collection('ProcessMetrics', (colErr, col) => {
     if (!colErr) {
-      col.insertOne(metric, (insertErr, result) => {
+      col.insertOne(_.merge({
+        created: Date.now()
+      }, metric), (insertErr, result) => {
         let retVal = null;
         if (!insertErr) {
           // If this assertion fails, it is a programmer error and the service should fail hard
           assert(result.ops.length === 1, 'Single insert should never return multiple values');
 
           // Since this is a single add function, just grab the first item in the list
-          retVal = result.ops[0];
+          // Currently leaving out the 'created' attribute
+          retVal = _.omit(['created'], result.ops[0]);
+
+          // Since this is a single add function, just grab the first item in the list
+          // Currently leaving out the 'created' attribute
+          retVal = _.omit(['created'], result.ops[0]);
         }
 
         done(insertErr, retVal);
