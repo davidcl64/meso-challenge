@@ -39,6 +39,17 @@ or debug it
 npm run dev:debug
 ```
 
+### Run with integration tests in *development* mode:
+
+Adds running of integration tests along with the usual unit test suite.
+
+Note: This requires mongodb support.  The simplest way to do this is to run the provided
+mongo container and adjusting the MONGO_DB environment variable to point to it.
+
+```shell
+MONGO_DB=mongodb://localhost:27017/meso_api_test npm run dev:int
+```
+
 #### Run in *production* mode:
 
 Compiles the application and starts it in production production mode.
