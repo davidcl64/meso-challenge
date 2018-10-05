@@ -9,7 +9,8 @@ function addNodeMetric(metric, done) {
   coreDB.collection('NodeMetrics', (colErr, col) => {
     if (!colErr) {
       col.insertOne(_.merge({
-        created: Date.now()
+        created:   Date.now(),
+        startTime: Date.now() - (metric.timeslice * 1000)
       }, metric), (insertErr, result) => {
         let retVal = null;
         if (!insertErr) {
@@ -18,7 +19,7 @@ function addNodeMetric(metric, done) {
 
           // Since this is a single add function, just grab the first item in the list
           // Currently leaving out the 'created' attribute
-          retVal = _.omit(['created'], result.ops[0]);
+          retVal = _.omit(['created', 'startTime'], result.ops[0]);
         }
 
         done(insertErr, retVal);
@@ -41,7 +42,8 @@ function addProcessMetric(metric, done) {
   coreDB.collection('ProcessMetrics', (colErr, col) => {
     if (!colErr) {
       col.insertOne(_.merge({
-        created: Date.now()
+        created:   Date.now(),
+        startTime: Date.now() - (metric.timeslice * 1000)
       }, metric), (insertErr, result) => {
         let retVal = null;
         if (!insertErr) {
@@ -50,11 +52,7 @@ function addProcessMetric(metric, done) {
 
           // Since this is a single add function, just grab the first item in the list
           // Currently leaving out the 'created' attribute
-          retVal = _.omit(['created'], result.ops[0]);
-
-          // Since this is a single add function, just grab the first item in the list
-          // Currently leaving out the 'created' attribute
-          retVal = _.omit(['created'], result.ops[0]);
+          retVal = _.omit(['created', 'startTime'], result.ops[0]);
         }
 
         done(insertErr, retVal);
