@@ -1,3 +1,8 @@
+import _ from 'lodash/fp';
+import services from '../services';
+
+const metrics = services.metrics;
+
 /*
     POST /v1/metrics/node/{nodename}/
       ○ Accepts a JSON payload with properties:
@@ -6,12 +11,22 @@
         ■ “mem”: (float) percentage used
 */
 function addNodeMetric(req, resp) {
-  /* eslint-disable no-void */
-  void req;
-  console.log('addNodeMetric called, responding with a 501');
-  resp
-    .status(501)
-    .send({ message: 'Not Implemented' });
+  metrics.addNodeMetric(_.merge(req.params)(req.body), (err, metric) => {
+    if (err) {
+      // To do: Flesh out error handling mappings to response codes.
+      resp
+        .status(500)
+        .send({
+          message: 'An unknown error has occured',
+          detail:  err.message
+        });
+      return;
+    }
+
+    resp
+      .status(201)
+      .send(metric);
+  });
 }
 
 /*
@@ -24,24 +39,35 @@ function addNodeMetric(req, resp) {
           the given time slice
 */
 function addProcessMetric(req, resp) {
-  /* eslint-disable no-void */
-  void req;
-  resp
-    .status(501)
-    .send({ message: 'Not Implemented' });
+  metrics.addNodeMetric(_.merge(req.params)(req.body), (err, metric) => {
+    if (err) {
+      // To do: Flesh out error handling mappings to response codes.
+      resp
+        .status(500)
+        .send({
+          message: 'An unknown error has occured',
+          detail:  err.message
+        });
+      return;
+    }
+
+    resp
+      .status(201)
+      .send(metric);
+  });
 }
 
 export default {
   routes: [
     {
       type:    'post',
-      path:    '/metrics/node/:nodename',
+      path:    '/metrics/node/:nodeName',
       handler: addNodeMetric
     },
 
     {
       type:    'post',
-      path:    '/metrics/nodes/:nodename/process/:processname',
+      path:    '/metrics/nodes/:nodeName/process/:processName',
       handler: addProcessMetric
     }
   ]

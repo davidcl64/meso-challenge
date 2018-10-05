@@ -7,7 +7,7 @@ const expect = chai.expect;
 
 describe('Metrics', () => {
   describe('POST /api/v1/metrics/node/:nodename', () => {
-    it('should respone with 501', () =>
+    it('should respone with 201', () =>
       request(Server)
         .post('/api/v1/metrics/node/bogusName/')
         .send({
@@ -17,14 +17,19 @@ describe('Metrics', () => {
         })
         .ok(res => res.status >= 0)
         .then(r => {
-          expect(r.statusCode).to.equal(501);
-          expect(r.body)
-            .to.be.an.an('object');
+          expect(r.statusCode).to.equal(201);
+          expect(r.body).to.be.an.an('object');
+          expect(r.body).to.include.all.keys(['nodeName', 'timeslice', 'cpu', 'mem', '_id']);
         }));
+
+    it('should fail if timeslice is missing');
+    it('should faile if cpu is missing');
+    it('should faile if mem is missing');
+    it('should fail if the database responds with an error');
   });
 
   describe('POST /api/v1/metrics/nodes/:nodename/process/:processname', () => {
-    it('should respone with 501', () =>
+    it('should respone with 201', () =>
       request(Server)
         .post('/api/v1/metrics/nodes/bogusName/process/bogusProcess/')
         .send({
@@ -32,12 +37,16 @@ describe('Metrics', () => {
           cpu_used:  0,
           mem_used:  0
         })
-        // .expect('Content-Type', /json/)
         .ok(res => res.status >= 0)
         .then(r => {
-          expect(r.statusCode).to.equal(501);
-          expect(r.body)
-            .to.be.an.an('object');
+          expect(r.statusCode).to.equal(201);
+          expect(r.body).to.be.an.an('object');
+          expect(r.body).to.include.all.keys(['nodeName', 'processName', 'timeslice', 'cpu_used', 'mem_used', '_id']);
         }));
+
+    it('should fail if timeslice is missing');
+    it('should faile if cpu_used is missing');
+    it('should faile if mem_used is missing');
+    it('should fail if the database responds with an error');
   });
 });

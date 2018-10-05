@@ -1,3 +1,7 @@
+import services from '../services';
+
+const analytics = services.analytics;
+
 /*
     GET /v1/analytics/nodes/average
         ○ Accepts a query parameter:
@@ -16,11 +20,25 @@
             the given timeslice
 */
 function getAverage(req, resp) {
-  /* eslint-disable no-void */
-  void req;
-  resp
-    .status(501)
-    .send({ message: 'Not Implemented' });
+  // Default timeslice to 60 seconds.  Swagger should enforce this, but for readability here...
+  const timeslice = req.params.timeslice || 60;
+
+  analytics.getNodeAverage(timeslice, (err, avg) => {
+    if (err) {
+      // To do: Flesh out error handling mappings to response codes.
+      resp
+        .status(500)
+        .send({
+          message: 'An unknown error has occured',
+          detail:  err.message
+        });
+      return;
+    }
+
+    resp
+      .status(200)
+      .send(avg);
+  });
 }
 
 /*
@@ -86,7 +104,7 @@ export default {
 
     {
       type:    'get',
-      path:    '/analytics/processes/:processname',
+      path:    '/analytics/processes/:processName',
       handler: getProcess
     }
   ]

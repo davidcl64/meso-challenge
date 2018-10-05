@@ -5,22 +5,21 @@ import Server from '../../server';
 const expect = chai.expect;
 
 describe('Analytics', () => {
-  describe('POST /api/v1/metrics/nodes/:nodename/process/:processname', () => {
-    it('should respone with 501', () =>
+  describe('GET /api/v1/analytics/nodes/average', () => {
+    it('should respone with 200', () =>
       request(Server)
-        .post('/api/v1/metrics/nodes/bogusName/process/bogusProcess/')
-        .send({
-          timeslice: 0,
-          cpu_used:  0,
-          mem_used:  0
-        })
+        .get('/api/v1/analytics/nodes/average')
+        .send()
         // .expect('Content-Type', /json/)
         .ok(res => res.status >= 0)
         .then(r => {
-          expect(r.statusCode).to.equal(501);
-          expect(r.body)
-            .to.be.an.an('object');
+          expect(r.statusCode).to.equal(200);
+          expect(r.body).to.be.an.an('object');
         }));
+
+    it('should default to 60 seconds');
+    it('should fail with a reasonable status code when ...');
+    it('should return an error if the request results in no metrics for the request');
   });
 
   describe('GET /analytics/processes', () => {
