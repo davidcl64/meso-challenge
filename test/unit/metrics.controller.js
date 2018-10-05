@@ -1,6 +1,6 @@
 import chai from 'chai';
 import request from 'supertest';
-import Server from '../server';
+import Server from '../../server';
 // import logIfError from './util';
 
 const expect = chai.expect;

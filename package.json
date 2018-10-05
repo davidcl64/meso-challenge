@@ -9,7 +9,8 @@
     "dev": "nodemon server --exec ./bin/dev.sh --config .nodemonrc.json",
     "dev:server": "nodemon server --exec babel-node --config .nodemonrc.json | pino-pretty",
     "dev:debug": "nodemon server --exec babel-node --config .nodemonrc.json --inspect | pino-pretty",
-    "test": "mocha --require @babel/register --exit",
+    "test": "mocha --require @babel/register --exit ./test/unit/index.js",
+    "test:integration": "mocha --require @babel/register --exit ./test/integration/index.js",
     "test:debug": "mocha --require @babel/register --inspect-brk --exit",
     "lint": "eslint -c .eslintrc.json {server,test}/**",
     "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**",
@@ -21,6 +22,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.2",
     "lodash": "^4.17.11",
+    "mongodb": "^3.1.6",
     "pino": "^5.5.0",
     "swagger-express-middleware": "^1.0.0-alpha.12"
   },
