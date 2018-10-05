@@ -53,6 +53,8 @@ function db(done) {
  * so db can be easily stubbed out for unit tests.
  */
 function collection(name, done) {
+  /* eslint-disable no-use-before-define */
+
   // Use module.exports here so db can be easily stubbed
   // out for unit tests
   exposed.db((err, _db) => {

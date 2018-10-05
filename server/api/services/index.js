@@ -1,5 +1,5 @@
-import coreDB from './coreDB.js';
-import metrics from './metrics.js';
+import coreDB from './coreDB';
+import metrics from './metrics';
 
 export default {
   coreDB,
