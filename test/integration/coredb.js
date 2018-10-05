@@ -1,11 +1,12 @@
-// import chai from 'chai';
-import mongo from '../../server/api/services';
+import chai from 'chai';
+import services from '../../server/api/services';
 
-// const expect = chai.expect;
+const expect = chai.expect;
 
-describe('Core DB', done => {
-  it('should connect to the database', () => {
-    mongo.db( db => {
+describe('Core DB', () => {
+  it('should connect to the database', done => {
+    services.coreDB.db( (err, db) => {
+      expect(err).to.be.null;
 
       db.listCollections()
         .toArray(cols => {
