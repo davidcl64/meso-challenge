@@ -20,7 +20,7 @@ describe('Metrics', () => {
   });
 
   it('should insert a process metric', done => {
-    services.metrics.addNodeMetric({
+    services.metrics.addProcessMetric({
       timeslice: 1,
       cpu_used:  1,
       mem_used:  1
