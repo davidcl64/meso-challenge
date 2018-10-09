@@ -89,6 +89,28 @@ Also provided is a docker-compose based environment for integration test with th
   3. test - runs through unit (and ideally integration tests) as the environment is being brought up.
 
 ```shell
+npm install
+npm run compile
+```
+
+Next, create a .env file in the root folder of the project.  It should look something like this:
+
+```
+APP_ID=meso-challenge
+PORT=3000
+LOG_LEVEL=debug
+REQUEST_LIMIT=100kb
+SESSION_SECRET=mySecret
+
+#Swagger
+SWAGGER_API_SPEC=/spec
+
+#MongoDB
+MONGO_DB="mongodb://mongo:27017/meso_api_test
+```
+
+then: 
+```shell
 npm run docker
 ```
 
