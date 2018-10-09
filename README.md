@@ -10,7 +10,12 @@ Get started developing...
 # install deps
 npm install
 
-# run in development mode
+# run in development mode.  This mode keeps watch for changes and runs 
+linting and unit tests when any are detected.  If everything passes, 
+the service will be brought up, however you must point the MONGO_DB environment 
+variable and a running instance of MongoDB.  To run the service along with 
+MongoDB, see running under Docker.
+
 npm run dev
 
 # run tests
@@ -27,7 +32,7 @@ npm install
 
 ## Run It
 #### Run in *development* mode:
-Runs the application is development mode. Should not be used in production
+Runs the application is development mode. Should not be used in production (see notes above under getting started)
 
 ```shell
 npm run dev
