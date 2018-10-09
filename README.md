@@ -10,7 +10,9 @@ Get started developing...
 # install deps
 npm install
 
-# run in development mode.  This mode keeps watch for changes and runs 
+# run in development mode.  
+
+This mode keeps watch for changes and runs 
 linting and unit tests when any are detected.  If everything passes, 
 the service will be brought up, however you must point the MONGO_DB environment 
 variable and a running instance of MongoDB.  To run the service along with 
